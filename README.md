@@ -37,9 +37,10 @@ Work in Progress; A file format is pretty useless unless there is an editor capa
 - `faces` is an array where each sequence of length faceLengths[D] contains the indices of the vectors in `vertices` that compose the face  
 
 ##### Length Requirements
-- `textureIndices.length` must equal faces.length
 - `normalIndices.length` must equal faces.length (for per vertex normals) or equal facesLengths.length (for per face normals)
-- `sum(faceLengths)` must equal faces.length
+- `normalMapIndices.length` must equal 0 or faces.length
+- `textureIndices.length` must equal 0 or faces.length
+- `sum(faceLengths)` must equal faces.length OR `faceLengths.length` can equal 0 if all faces are triangles
 
 ##### Range Requirements
 - `face[i]` must be in the range [0, vertices.length)
@@ -56,9 +57,9 @@ Work in Progress; A file format is pretty useless unless there is an editor capa
 | 3 | faces.length |
 | vertices.length * 2 | vertices |
 | normals.length | normals |
-| normalIndices.length (faceLengths.length * 2 OR faces.length * 2) | normalIndices |
-| normalMapIndices.length (0 OR faces.length * 3) | normalMapIndices |
-| textureIndices.length (0 OR faces.length * 3) | textureIndices |
+| normalIndices.length * 2 | normalIndices |
+| normalMapIndices.length * 3 | normalMapIndices |
+| textureIndices.length | textureIndices |
 | faceLengths.length | faceLengths |
 | faceLengths.length * 2 | faces |
 
