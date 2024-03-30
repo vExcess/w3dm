@@ -26,8 +26,70 @@ Therefore I am making the W3DM file format which has the following features:
 ## Editor
 Work in Progress; A file format is pretty useless unless there is an editor capable of working with them so I'll make a 3D Paint / Blender type program for working with w3dm files.
 
-## Codec + Documentation
-Work in Progress; I'll write a codec in both JavaScript and Zig and provide documentation for both when they are complete.
+## Documentation
+##### JSON Format
+- `vertices` is a flattened array of 3D vectors where each vector is a point in 3D space  
+- `normals` is a flattened array of 3D vectors where each vector is a normal vector  
+- `texIndices` is an array where each number at index A is the texture imageData index of vertex(faces[A])  
+- `normalIndices` is an array where each number at index B is the index of a vector in `normals` where said vector is the normal of vertex(faces[B])  
+- `normalMapIndices` is an array where each number at index C is the normal map imageData index of vertex(faces[C])  
+- `faceLengths` is an array where each number at index D is the number of vertices in face(D)  
+- `faces` is an array where each sequence of length faceLengths[D] contains the indices of the vectors in `vertices` that compose the face  
 
-## Specification
-Work in Progress
+`W3DM.encode(model)` takes a model where `model` is a JS object in the format:
+```js
+{
+	// vertex values are normalized and then scaled up and stored as signed 16-bit integers
+    vertices: [
+        x0, y0, z0,
+        x1, y1, z1,
+        x2, y2, z2,
+        ...
+    ],
+    // normal values are mapped from range [-1.0, 1.0] and stored as unsigned 8-bit integers
+    // if normalMapIndices is not undefined, then normals must be undefined
+    normals: [
+        x0, y0, z0,
+        x1, y1, z1,
+        x2, y2, z2,
+        ...
+    ] OR undefined,
+    // texture values are stored as unsigned 24-bit integers
+    texIndices: [
+        idx0, idx1, idx2, ...
+    ],
+    // normal indices are stored as unsigned 16 bit integers
+    // if normalMapIndices is not undefined, then normalIndices must be undefined
+    normalIndices: [
+        0, 0, 0, 0,
+        0, 0, 0, 0,
+        0, 0, 0, 0,
+        0, 0, 0, 0,
+        0, 0, 0, 0,
+        0, 0, 0, 0,
+    ] OR undefined,
+    // normalMapIndices indices are stored as unsigned 24-bit integers
+    // if normalMapIndices is undefined, normals and normalIndices must both not be undefined
+    normalMapIndices: [
+        0, 0, 0, 0,
+        0, 0, 0, 0,
+        0, 0, 0, 0,
+        0, 0, 0, 0,
+        0, 0, 0, 0,
+        0, 0, 0, 0,
+    ] OR undefined,
+    // face lengths are stored as unsigned 8-bit integers
+    faceLengths: [
+        4, 4, 4, 4, 4, 4
+    ],
+    // face values are stored as unsigned 16 bit integers
+    faces: [
+        0, 1, 2, 3,
+        4, 5, 6, 7,
+        0, 3, 7, 4,
+        1, 2, 6, 5,
+        0, 1, 5, 4,
+        2, 3, 7, 6
+    ]
+}
+```
